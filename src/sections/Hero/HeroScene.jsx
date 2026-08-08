@@ -9,6 +9,7 @@ import {
   ParallaxRig,
   ResponsiveRig,
   Silhouette,
+  TimeDriver,
 } from '../../components/three/Primitives.jsx'
 import Effects from '../../components/three/Effects.jsx'
 import Pagoda from './Pagoda.jsx'
@@ -55,9 +56,6 @@ const Z = {
 
 function Sky() {
   const ref = useRef(null)
-  useFrame((state) => {
-    if (ref.current) ref.current.uTime = state.clock.elapsedTime
-  })
 
   return (
     // Sized so the visible slice spans most of the ramp — an over-tall plane
@@ -77,15 +75,13 @@ function Sky() {
         uCloud={0.44}
         toneMapped={false}
       />
+      <TimeDriver target={ref} />
     </mesh>
   )
 }
 
 function River() {
   const ref = useRef(null)
-  useFrame((state) => {
-    if (ref.current) ref.current.uTime = state.clock.elapsedTime
-  })
 
   return (
     <mesh position={[0, -16, Z.water]}>
@@ -97,6 +93,7 @@ function River() {
         uHighlight={new THREE.Color('#ffd6c9')}
         toneMapped={false}
       />
+      <TimeDriver target={ref} />
     </mesh>
   )
 }
@@ -219,7 +216,10 @@ export default function HeroScene({ tier = 'high', reduced = false }) {
           <ResponsiveRig portraitScale={0.55} portraitOffset={[7.5, 3, 0]}>
           <Sky />
 
-          <Glow position={[22, 10, Z.sky + 8]} size={185} color="#ffe2c8" intensity={0.13} falloff={3.6} core={0} />
+          {/* Sized to the visible falloff, not to the frustum: at size 185
+              this quad blew past both frustum axes and shaded a full screen of
+              fragments that were already at zero alpha. */}
+          <Glow position={[22, 10, Z.sky + 8]} size={96} color="#ffe2c8" intensity={0.17} falloff={2.6} core={0} />
           <LightShafts
             position={[20, 14, Z.peaksMid + 5]}
             count={5}

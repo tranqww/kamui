@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 import {
+  color,
   Float,
   Glow,
   Haze,
@@ -119,8 +120,8 @@ export default function CardsScene({ tier = 'high', reduced = false, cards, inde
         <mesh position={[0, 0, -40]}>
           <planeGeometry args={[220, 130]} />
           <gradientMaterial
-            uTop={new THREE.Color('#4a2a63')}
-            uBottom={new THREE.Color('#2c1740')}
+            uTop={color('#4a2a63')}
+            uBottom={color('#2c1740')}
             uY0={-40}
             uY1={40}
             uGrain={0.02}
@@ -167,7 +168,7 @@ export default function CardsScene({ tier = 'high', reduced = false, cards, inde
             <planeGeometry args={[34, 34]} />
             <glowMaterial
               ref={glowRef}
-              uColor={new THREE.Color('#ffb0d0')}
+              uColor={color('#ffb0d0')}
               uIntensity={0.2}
               uFalloff={3.2}
               uCore={0}

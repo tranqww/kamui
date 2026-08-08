@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import * as THREE from 'three'
-import { Glow, Silhouette } from '../../components/three/Primitives.jsx'
+import { Glow, MergedSilhouette, Silhouette } from '../../components/three/Primitives.jsx'
 import { pagodaRoofShape, roundedRectShape } from '../../lib/shapes.js'
 
 const ROOF_TOP = '#3b5f66'
@@ -65,8 +65,9 @@ export default function Pagoda({ position = [0, 0, 0], scale = 1 }) {
 
   const eaveLamp = useMemo(() => roundedRectShape({ width: 0.95, height: 1.25, radius: 0.3 }), [])
 
+  const baluster = useMemo(() => roundedRectShape({ width: 0.2, height: 1.5, radius: 0.05 }), [])
   const balusters = useMemo(
-    () => [-5.0, -3.6, -2.2, -0.8, 0.6, 2.0, 3.4, 4.8].map((x, i) => ({ x, key: `${x}-${i}` })),
+    () => [-5.0, -3.6, -2.2, -0.8, 0.6, 2.0, 3.4, 4.8].map((x) => ({ position: [x, -1.1, 0.14] })),
     [],
   )
 
@@ -80,9 +81,7 @@ export default function Pagoda({ position = [0, 0, 0], scale = 1 }) {
 
       {/* Deck and railing */}
       <Silhouette shape={deck} position={[0, -1.9, 0.1]} top={WOOD_TOP} bottom="#4a3128" />
-      {balusters.map(({ x, key }) => (
-        <Beam key={key} x={x} y={-1.1} w={0.2} h={1.5} z={0.14} top="#8a5f45" bottom="#4a3128" />
-      ))}
+      <MergedSilhouette shape={baluster} instances={balusters} top="#8a5f45" bottom="#4a3128" />
       <Silhouette shape={rail} position={[0, -0.4, 0.18]} top="#a2724f" bottom="#6b4736" />
 
       {/* Body with a lit interior */}

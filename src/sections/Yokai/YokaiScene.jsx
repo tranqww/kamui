@@ -5,6 +5,7 @@ import {
   Float,
   Glow,
   Haze,
+  MergedSilhouette,
   ParallaxRig,
   ResponsiveRig,
   Silhouette,
@@ -47,31 +48,26 @@ function Trunks({ z, count, spread, width, height, top, bottom, seed = 1, opacit
       // for a layer this simple.
       const t = (i + 0.5) / count
       const jitter = Math.sin((i + seed) * 12.9898) * 0.5
+      const w = width * (0.7 + Math.abs(Math.sin((i + seed) * 4.13)) * 0.7)
+      const h = height * (0.75 + Math.abs(Math.cos((i + seed) * 7.71)) * 0.5)
       out.push({
-        key: `t-${z}-${i}`,
-        x: (t - 0.5) * spread + jitter * (spread / count),
-        w: width * (0.7 + Math.abs(Math.sin((i + seed) * 4.13)) * 0.7),
-        h: height * (0.75 + Math.abs(Math.cos((i + seed) * 7.71)) * 0.5),
+        position: [(t - 0.5) * spread + jitter * (spread / count), -24 + h / 2, 0],
+        scale: [w, h, 1],
       })
     }
     return out
-  }, [z, count, spread, width, height, seed])
+  }, [count, spread, width, height, seed])
 
   return (
-    <group>
-      {items.map(({ key, x, w, h }) => (
-        <Silhouette
-          key={key}
-          shape={trunk}
-          position={[x, -24 + h / 2, z]}
-          scale={[w, h, 1]}
-          top={top}
-          bottom={bottom}
-          opacity={opacity}
-          grain={0.006}
-        />
-      ))}
-    </group>
+    <MergedSilhouette
+      shape={trunk}
+      instances={items}
+      position={[0, 0, z]}
+      top={top}
+      bottom={bottom}
+      opacity={opacity}
+      grain={0.006}
+    />
   )
 }
 
@@ -96,14 +92,7 @@ function Portrait() {
 
   return (
     <group position={[FRAME_X, 0, Z.portrait]}>
-      <Silhouette
-        shape={sky}
-        position={[0, 0, 0]}
-        top="#3b2a63"
-        bottom="#150d2a"
-        gradientFrom={-WIN_H / 2}
-        gradientHeight={WIN_H}
-      />
+      <Silhouette shape={sky} position={[0, 0, 0]} top="#3b2a63" bottom="#150d2a" />
 
       {/* Moon haze behind the peaks */}
       <Glow position={[3.2, 5.4, 0.1]} size={13} color="#6f7fc4" intensity={0.28} falloff={2.8} core={0} />

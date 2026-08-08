@@ -28,9 +28,15 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run build
+      # Runs before the build so the Vite base can come from Pages itself.
+      # Hard-coding "/kamui/" works right up until the repo is renamed or
+      # forked, at which point the build passes and every asset 404s.
+      - id: pages
+        uses: actions/configure-pages@v5
 
-      - uses: actions/configure-pages@v5
+      - run: npm run build
+        env:
+          VITE_BASE: ${{ steps.pages.outputs.base_path }}
 
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -14,9 +14,11 @@ import { shaderMaterial } from '@react-three/drei'
 const VERT = /* glsl */ `
   varying vec2 vUv;
   varying vec3 vWorldPos;
+  varying vec3 vLocalPos;
 
   void main() {
     vUv = uv;
+    vLocalPos = position;
     vec4 world = modelMatrix * vec4(position, 1.0);
     vWorldPos = world.xyz;
     gl_Position = projectionMatrix * viewMatrix * world;
@@ -84,6 +86,7 @@ const GradientMaterial = shaderMaterial(
 
     varying vec2 vUv;
     varying vec3 vWorldPos;
+    varying vec3 vLocalPos;
 
     float hash21(vec2 p) {
       p = fract(p * vec2(123.34, 456.21));
@@ -92,7 +95,11 @@ const GradientMaterial = shaderMaterial(
     }
 
     void main() {
-      float t = clamp((vWorldPos.y - uY0) / max(uY1 - uY0, 0.0001), 0.0, 1.0);
+      // Object space, deliberately. A world-space ramp would slide through the
+      // shape whenever any ancestor group moves or scales — which is exactly
+      // what the scroll rig and the portrait reframing do on every frame.
+      // Object space makes the gradient a property of the silhouette itself.
+      float t = clamp((vLocalPos.y - uY0) / max(uY1 - uY0, 0.0001), 0.0, 1.0);
       t = t * t * (3.0 - 2.0 * t);
       vec3 col = mix(uBottom, uTop, t);
 

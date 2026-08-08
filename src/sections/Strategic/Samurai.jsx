@@ -124,7 +124,9 @@ export default function Samurai({ position = [0, 0, 0], scale = 1 }) {
       <Glow position={[2.2, 5.6, -0.8]} size={11} color="#ffc878" intensity={0.5} falloff={2.2} core={0} />
 
       {/* Katana on the floor, in front of the figure */}
-      <group position={[-3.4, 0, 0.9]} rotation={[0, 0, -0.06]}>
+      {/* Set down on her right, clear of the dealt hand — a prop the eye can
+          name only helps if nothing is lying across it. */}
+      <group position={[2.6, 0.15, -0.5]} rotation={[0, 0, 0.05]}>
         <Silhouette shape={saya} top={ARMOR_TOP} bottom={ARMOR_BOTTOM} curveSegments={22} rim={0.5} rimColor="#7fc4bd" rimWidth={0.5} />
         <Silhouette shape={tsuka} position={[0, 0, 0.02]} top="#4a3a52" bottom="#1e1626" />
         <Silhouette shape={tsuba} position={[0, 0, 0.04]} top="#b98b3e" bottom="#6b4a1e" />

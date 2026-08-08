@@ -84,79 +84,95 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight, align = 'center') {
    Ornaments
    ========================================================================== */
 
-/** Quilted diamond lattice used on the card back. */
-function diamondQuilt(ctx, x, y, w, h, step, color, alpha) {
-  ctx.save()
-  ctx.beginPath()
-  ctx.rect(x, y, w, h)
-  ctx.clip()
-  ctx.globalAlpha = alpha
-  ctx.strokeStyle = color
-  ctx.lineWidth = 1.5
+/**
+ * Repeating ornament is drawn once into a tile and stamped with a pattern
+ * fill.
+ *
+ * Drawing these cell by cell into the full card cost several hundred Canvas2D
+ * calls per texture, all of it synchronous on the main thread at the exact
+ * moment the deck scrolls into view. One tile plus one fillRect is visually
+ * identical and roughly two orders of magnitude fewer calls.
+ */
+function tiled(ctx, x, y, w, h, tileW, tileH, alpha, drawTile) {
+  const tile = document.createElement('canvas')
+  tile.width = Math.max(1, Math.ceil(tileW))
+  tile.height = Math.max(1, Math.ceil(tileH))
+  drawTile(tile.getContext('2d'), tile.width, tile.height)
 
-  for (let i = -h; i < w + h; i += step) {
-    ctx.beginPath()
-    ctx.moveTo(x + i, y)
-    ctx.lineTo(x + i + h, y + h)
-    ctx.stroke()
-    ctx.beginPath()
-    ctx.moveTo(x + i, y + h)
-    ctx.lineTo(x + i + h, y)
-    ctx.stroke()
-  }
+  ctx.save()
+  ctx.globalAlpha = alpha
+  ctx.fillStyle = ctx.createPattern(tile, 'repeat')
+  ctx.translate(x, y)
+  ctx.fillRect(0, 0, w, h)
   ctx.restore()
 }
 
-/** Honeycomb band — the reference's lower-panel texture. */
-function honeycomb(ctx, x, y, w, h, r, color, alpha) {
-  ctx.save()
-  ctx.beginPath()
-  ctx.rect(x, y, w, h)
-  ctx.clip()
-  ctx.globalAlpha = alpha
-  ctx.fillStyle = color
+/** Quilted diamond lattice used on the card back. */
+function diamondQuilt(ctx, x, y, w, h, step, stroke, alpha) {
+  tiled(ctx, x, y, w, h, step, step, alpha, (t, tw, th) => {
+    t.strokeStyle = stroke
+    t.lineWidth = 1.5
+    // Both diagonals of the cell, drawn past the edges so the seams close.
+    t.beginPath()
+    t.moveTo(-tw, 0)
+    t.lineTo(tw * 2, th * 3)
+    t.moveTo(-tw, th)
+    t.lineTo(tw * 2, -th * 2)
+    t.moveTo(-tw, th * 2)
+    t.lineTo(tw * 2, -th)
+    t.stroke()
+  })
+}
 
+/** Honeycomb band — the reference's lower-panel texture. */
+function honeycomb(ctx, x, y, w, h, r, fill, alpha) {
   const dx = r * 1.74
-  const dy = r * 1.5
-  for (let row = 0; row * dy < h + dy; row += 1) {
-    for (let col = 0; col * dx < w + dx; col += 1) {
-      const cx = x + col * dx + (row % 2 ? dx / 2 : 0)
-      const cy = y + row * dy
-      ctx.beginPath()
+  const dy = r * 3
+  tiled(ctx, x, y, w, h, dx, dy, alpha, (t) => {
+    t.fillStyle = fill
+    // Two rows per tile: the offset row is what makes the lattice interlock.
+    const hexes = [
+      [dx / 2, 0],
+      [dx / 2, dy],
+      [0, dy / 2],
+      [dx, dy / 2],
+    ]
+    hexes.forEach(([cx, cy]) => {
+      t.beginPath()
       for (let i = 0; i < 6; i += 1) {
         const a = (Math.PI / 3) * i - Math.PI / 6
         const px = cx + Math.cos(a) * r * 0.82
         const py = cy + Math.sin(a) * r * 0.82
-        if (i) ctx.lineTo(px, py)
-        else ctx.moveTo(px, py)
+        if (i) t.lineTo(px, py)
+        else t.moveTo(px, py)
       }
-      ctx.closePath()
-      ctx.fill()
-    }
-  }
-  ctx.restore()
+      t.closePath()
+      t.fill()
+    })
+  })
 }
 
 /** Seigaiha — the overlapping-wave pattern, used on section backdrops. */
-export function drawSeigaiha(ctx, w, h, r, color, alpha) {
-  ctx.save()
-  ctx.globalAlpha = alpha
-  ctx.strokeStyle = color
-  ctx.lineWidth = 2
-
+export function drawSeigaiha(ctx, w, h, r, stroke, alpha) {
   const dy = r * 0.62
-  for (let row = -1; row * dy < h + r; row += 1) {
-    for (let col = -1; col * r < w + r; col += 1) {
-      const cx = col * r + (row % 2 ? r / 2 : 0)
-      const cy = row * dy
+  tiled(ctx, 0, 0, w, h, r, dy * 2, alpha, (t) => {
+    t.strokeStyle = stroke
+    t.lineWidth = 2
+    const fans = [
+      [0, 0],
+      [r, 0],
+      [r / 2, dy],
+      [0, dy * 2],
+      [r, dy * 2],
+    ]
+    fans.forEach(([cx, cy]) => {
       for (let k = 1; k <= 3; k += 1) {
-        ctx.beginPath()
-        ctx.arc(cx, cy, (r / 2) * (k / 3), Math.PI, TAU)
-        ctx.stroke()
+        t.beginPath()
+        t.arc(cx, cy, (r / 2) * (k / 3), Math.PI, TAU)
+        t.stroke()
       }
-    }
-  }
-  ctx.restore()
+    })
+  })
 }
 
 /** A cut gem: hexagon, facets, highlight. */

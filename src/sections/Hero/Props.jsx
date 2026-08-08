@@ -1,6 +1,11 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import * as THREE from 'three'
-import { Glow, Silhouette } from '../../components/three/Primitives.jsx'
+import {
+  color,
+  Glow,
+  MergedSilhouette,
+  Silhouette,
+} from '../../components/three/Primitives.jsx'
 import {
   archBridgeShape,
   craneShape,
@@ -23,6 +28,8 @@ export function Bridge({ position = [0, 0, 0], span = 26, rise = 4.6, scale = 1 
   const handrail = useMemo(() => archBridgeShape({ span: span * 0.97, rise, deck: 0.34 }), [span, rise])
   const post = useMemo(() => roundedRectShape({ width: 0.22, height: 1, radius: 0.08 }), [])
 
+  const railOffset = 1.55
+
   // Balusters follow the deck curve, so each one gets its own height.
   const posts = useMemo(() => {
     const half = span / 2
@@ -32,12 +39,10 @@ export function Bridge({ position = [0, 0, 0], span = 26, rise = 4.6, scale = 1 
       const t = i / 12
       const x = bezier(t, -half, 0, half)
       const y = bezier(t, 0, c, 0)
-      out.push({ x, y, key: `post-${i}` })
+      out.push({ position: [x, y + railOffset * 0.5, 0.06], scale: [1, railOffset, 1] })
     }
     return out
   }, [span, rise])
-
-  const railOffset = 1.55
 
   return (
     <group position={position} scale={scale}>
@@ -48,16 +53,7 @@ export function Bridge({ position = [0, 0, 0], span = 26, rise = 4.6, scale = 1 
         bottom="#5c3b33"
         curveSegments={40}
       />
-      {posts.map(({ x, y, key }) => (
-        <Silhouette
-          key={key}
-          shape={post}
-          position={[x, y + railOffset * 0.5, 0.06]}
-          scale={[1, railOffset, 1]}
-          top="#8a5c44"
-          bottom="#5c3b33"
-        />
-      ))}
+      <MergedSilhouette shape={post} instances={posts} top="#8a5c44" bottom="#5c3b33" />
       <Silhouette
         shape={handrail}
         position={[0, railOffset, 0.12]}
@@ -106,9 +102,8 @@ export function Stairway({
       Array.from({ length: steps }, (_, i) => {
         const t = (i + 0.5) / steps
         return {
-          key: `tread-${i}`,
-          y: t * height,
-          w: bottomWidth + (topWidth - bottomWidth) * t,
+          position: [0, t * height, 0.02],
+          scale: [(bottomWidth + (topWidth - bottomWidth) * t) * 0.94, 1, 1],
         }
       }),
     [steps, height, bottomWidth, topWidth],
@@ -117,18 +112,14 @@ export function Stairway({
   return (
     <group position={position} rotation={rotation}>
       <Silhouette shape={body} top="#7d6f8d" bottom="#33294a" />
-      {treads.map(({ key, y, w }) => (
-        <Silhouette
-          key={key}
-          shape={tread}
-          position={[0, y, 0.02]}
-          scale={[w * 0.94, 1, 1]}
-          top="#bfb0c8"
-          bottom="#6e5d84"
-          opacity={0.4}
-          grain={0}
-        />
-      ))}
+      <MergedSilhouette
+        shape={tread}
+        instances={treads}
+        top="#bfb0c8"
+        bottom="#6e5d84"
+        opacity={0.4}
+        grain={0}
+      />
     </group>
   )
 }
@@ -137,7 +128,7 @@ export function Stairway({
    Stone lantern — an actual solid of revolution
    ========================================================================== */
 
-export function StoneLantern({ position = [0, 0, 0], scale = 1, glow = true }) {
+export function StoneLantern({ position, scale = 1, glow = true }) {
   const geometry = useMemo(() => {
     const profile = lanternProfile({ scale: 1 })
     const geo = new THREE.LatheGeometry(profile, 18)
@@ -145,32 +136,37 @@ export function StoneLantern({ position = [0, 0, 0], scale = 1, glow = true }) {
     return geo
   }, [])
 
+  useEffect(() => () => geometry.dispose(), [geometry])
+
+  // Object-space bounds, matching the gradient shader's space.
   const bounds = useMemo(() => {
     const box = geometry.boundingBox
-    return [box.min.y * scale + position[1], box.max.y * scale + position[1]]
-  }, [geometry, scale, position])
+    return [box.min.y, box.max.y]
+  }, [geometry])
 
   return (
     <group position={position} scale={scale}>
       <mesh geometry={geometry} rotation={[0, 0.4, 0]}>
         <gradientMaterial
-          uTop={new THREE.Color('#5a4a68')}
-          uBottom={new THREE.Color('#241a33')}
-          uY0={(bounds[0] - position[1]) / scale}
-          uY1={(bounds[1] - position[1]) / scale}
+          uTop={color('#6a5878')}
+          uBottom={color('#241a33')}
+          uY0={bounds[0]}
+          uY1={bounds[1]}
           uGrain={0.018}
-          uRim={0.5}
-          uRimColor={new THREE.Color('#c79ec0')}
-          uRimWidth={0.5}
+          uRim={0.42}
+          uRimColor={color('#c79ec0')}
+          uRimWidth={0.4}
           side={THREE.DoubleSide}
           toneMapped={false}
         />
       </mesh>
       {glow && (
         <>
-          {/* Tight core for the lit window, wide halo for the spill */}
-          <Glow position={[0, 1.96, 0.66]} size={1.9} color="#ffe0a0" intensity={1} falloff={1.6} core={0.34} flicker={0.28} />
-          <Glow position={[0, 1.96, 0.62]} size={6.5} color="#ff9c3c" intensity={0.34} falloff={3.2} core={0} flicker={0.18} />
+          {/* Tight core for the lit window, wide halo for the spill. Keep the
+              core small: sized to the firebox it reads as a lantern, sized to
+              the whole stone it reads as a face. */}
+          <Glow position={[0, 1.9, 0.66]} size={1.15} color="#ffe6b4" intensity={1} falloff={1.4} core={0.4} flicker={0.28} />
+          <Glow position={[0, 1.9, 0.6]} size={4.8} color="#ff9c3c" intensity={0.3} falloff={3} core={0} flicker={0.16} />
         </>
       )}
     </group>
@@ -193,7 +189,7 @@ export function Crane({ position = [0, 0, 0], scale = 1, flip = false, legHeight
       <mesh position={[-0.05, 0.05, -0.05]} scale={[1, 0.34, 1]}>
         <planeGeometry args={[3.4, 3.4]} />
         <glowMaterial
-          uColor={new THREE.Color('#241738')}
+          uColor={color('#241738')}
           uIntensity={0.62}
           uFalloff={2.2}
           uCore={0}

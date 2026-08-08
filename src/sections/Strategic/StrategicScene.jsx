@@ -6,6 +6,7 @@ import {
   Float,
   Glow,
   Haze,
+  MergedSilhouette,
   ParallaxRig,
   ResponsiveRig,
   Silhouette,
@@ -30,8 +31,9 @@ const Z = {
 /** A single tatami-room wall panel run. */
 function Wall() {
   const slat = useMemo(() => roundedRectShape({ width: 6, height: 90, radius: 0.1 }), [])
-  const slats = useMemo(
-    () => Array.from({ length: 15 }, (_, i) => ({ key: `slat-${i}`, x: -70 + i * 10 })),
+  const beam = useMemo(() => roundedRectShape({ width: 240, height: 3.2, radius: 0.4 }), [])
+  const slatInstances = useMemo(
+    () => Array.from({ length: 15 }, (_, i) => ({ position: [-70 + i * 10, 0, 0] })),
     [],
   )
 
@@ -49,24 +51,17 @@ function Wall() {
         />
       </mesh>
 
-      {slats.map(({ key, x }) => (
-        <Silhouette
-          key={key}
-          shape={slat}
-          position={[x, 0, Z.slats]}
-          top="#3d1b2e"
-          bottom="#150a19"
-          opacity={0.55}
-        />
-      ))}
+      <MergedSilhouette
+        shape={slat}
+        instances={slatInstances}
+        position={[0, 0, Z.slats]}
+        top="#3d1b2e"
+        bottom="#150a19"
+        opacity={0.55}
+      />
 
       {/* Horizontal beam separating wall from ceiling */}
-      <Silhouette
-        shape={roundedRectShape({ width: 240, height: 3.2, radius: 0.4 })}
-        position={[0, 14, Z.beam]}
-        top="#4d2337"
-        bottom="#26101f"
-      />
+      <Silhouette shape={beam} position={[0, 14, Z.beam]} top="#4d2337" bottom="#26101f" />
     </group>
   )
 }
@@ -107,10 +102,13 @@ function Candle({ position = [0, 0, 0], scale = 1, seed = 0 }) {
     return s
   }, [])
 
-  useFrame((state) => {
+  const elapsed = useRef(0)
+
+  useFrame((_, delta) => {
     const g = flameRef.current
     if (!g) return
-    const t = state.clock.elapsedTime * 6 + seed * 3.1
+    elapsed.current += Math.min(delta, 1 / 30)
+    const t = elapsed.current * 6 + seed * 3.1
     // Flames lean and pulse; a fixed scale reads as a decal.
     g.scale.set(1 + Math.sin(t * 0.9) * 0.06, 1 + Math.sin(t) * 0.14, 1)
     g.rotation.z = Math.sin(t * 0.6 + seed) * 0.09
@@ -162,10 +160,13 @@ function FloorCard({ position, rotation, glow = 1, seed = 0 }) {
     return s
   }, [])
 
-  useFrame((state) => {
+  const elapsed = useRef(0)
+
+  useFrame((_, delta) => {
     if (!glowRef.current) return
+    elapsed.current += Math.min(delta, 1 / 30)
     // Slow, offset pulse so the fan never breathes in unison.
-    const t = state.clock.elapsedTime * 1.4 + seed * 2.3
+    const t = elapsed.current * 1.4 + seed * 2.3
     glowRef.current.uIntensity = glow * (0.62 + Math.sin(t) * 0.22)
   })
 
@@ -217,12 +218,10 @@ export default function StrategicScene({ tier = 'high', reduced = false }) {
         {/* Floor, tipped away from the camera */}
         <Silhouette
           shape={floorBoard}
-          position={[0, -18, Z.floor]}
+          position={[0, -21, Z.floor]}
           rotation={[-1.24, 0, 0]}
           top="#4a2a24"
           bottom="#1c0e17"
-          gradientFrom={-32}
-          gradientHeight={26}
         />
 
         <HangingLantern position={[19, 6, Z.lantern]} scale={1.15} />

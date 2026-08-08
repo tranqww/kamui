@@ -1,5 +1,5 @@
 import { EffectComposer, Bloom, Vignette, Noise } from '@react-three/postprocessing'
-import { BlendFunction, KernelSize } from 'postprocessing'
+import { BlendFunction } from 'postprocessing'
 
 /**
  * Post pass.
@@ -21,11 +21,15 @@ export default function Effects({
 
   return (
     <EffectComposer multisampling={tier === 'high' ? 4 : 0} enableNormalPass={false}>
+      {/* With mipmapBlur on, `kernelSize` is ignored and the cost is set by
+          the number of mip levels, so that is what tiers down here. Eight
+          levels is postprocessing's default; five is visibly the same bloom
+          at a third of the render targets. */}
       <Bloom
         intensity={bloom}
         luminanceThreshold={threshold}
         luminanceSmoothing={smoothing}
-        kernelSize={tier === 'high' ? KernelSize.LARGE : KernelSize.MEDIUM}
+        levels={tier === 'high' ? 7 : 5}
         mipmapBlur
       />
       <Vignette offset={0.28} darkness={vignette} blendFunction={BlendFunction.NORMAL} />

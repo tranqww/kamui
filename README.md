@@ -60,10 +60,12 @@ src/
 
 Four WebGL scenes on one page is a real cost, so:
 
-- **Each canvas parks itself.** `Stage` watches its own section and sets `frameloop="never"` the moment it leaves the viewport, plus whenever the tab is hidden. In practice one scene renders at a time.
-- **Device tiering.** Low-core and small coarse-pointer devices drop DPR to 1, skip antialiasing, skip post-processing entirely, and cut particle counts by roughly two-thirds.
+- **Each canvas parks, then leaves.** `Stage` watches its own section on two rings. The inner one sets `frameloop="never"` as the section passes out of view (and whenever the tab is hidden), so at most one scene is drawing. The outer one unmounts the canvas entirely once the section is more than 1.5 viewports away, after a 4-second dwell. Parking stops CPU work but never returns the context's render targets, and four bloom composers' worth of full-resolution half-float buffers is real VRAM to be holding for scenes nobody can see.
+- **Device tiering.** Low-core and small coarse-pointer devices drop DPR to 1, skip post-processing entirely, and cut particle counts by roughly two-thirds. Bloom drops from 7 mip levels to 5 below the top tier.
+- **Repeated geometry is merged.** Tree trunks, stair treads, bridge posts, shrine balusters and wall slats are one shape stamped many times and never animated individually, so they are baked into a single geometry each — roughly 60 draw calls saved across the page.
 - **Particles are one draw call.** Sakura, embers and fireflies are a single `Points` buffer each, animated entirely in the vertex shader.
-- **Geometry is built once.** Every shape is memoised and disposed on unmount.
+- **Gradients ramp in object space.** A world-space ramp slides through its own shape whenever an ancestor group moves — which is exactly what the scroll rig and the portrait reframing do every frame.
+- **Time comes from an accumulator, not the clock.** R3F zeroes `clock.elapsedTime` every time `frameloop` flips, which here is every scroll in and out of a section. Reading it would teleport every particle field on re-entry.
 
 three.js is ~179 KB gzipped and dominates the bundle; the rest of the site is about 50 KB gzipped.
 
