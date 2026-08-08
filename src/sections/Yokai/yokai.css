@@ -46,6 +46,22 @@
     padding-block-end: clamp(3rem, 9vw, 5rem);
   }
 
+  /* Same reasoning as the room: portrait puts the copy on top of the grove,
+     so the grove has to darken under it. */
+  .yokai::after {
+    content: '';
+    position: absolute;
+    inset: 38% 0 0;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      color-mix(in srgb, var(--dusk-grove-end) 74%, transparent) 44%,
+      var(--dusk-grove-end) 88%
+    );
+  }
+
   .yokai__copy {
     max-width: 34rem;
   }

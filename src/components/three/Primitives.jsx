@@ -5,6 +5,7 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import '../../lib/materials.jsx'
 import { attachPointer, pointerTarget } from '../../lib/pointer.js'
 import { clamp01, damp, lerp, makeRng } from '../../lib/rng.js'
+import { useReducedMotion } from '../../hooks/useEnvironment.js'
 
 /* ==========================================================================
    Silhouette — a generated THREE.Shape filled with a vertical gradient
@@ -470,10 +471,18 @@ export function Float({
 }) {
   const ref = useRef(null)
   const elapsed = useRef(0)
+  // Ambient drift (petals, embers, flame flicker) is atmosphere and stays;
+  // whole objects bobbing in place is transport and does not.
+  const reduced = useReducedMotion()
 
   useFrame((_, delta) => {
     const g = ref.current
     if (!g) return
+    if (reduced) {
+      g.position.y = 0
+      g.rotation.z = 0
+      return
+    }
     elapsed.current += Math.min(delta, 1 / 30)
     const t = elapsed.current * speed + offset
     g.position.y = Math.sin(t) * amplitude

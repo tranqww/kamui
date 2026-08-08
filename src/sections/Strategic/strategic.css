@@ -89,6 +89,23 @@
     padding-block-end: clamp(3rem, 9vw, 5rem);
   }
 
+  /* Portrait stacks the copy over the scene instead of beside it, so the
+     lower third needs a floor to sit on. Anchored to the section's own end
+     colour, it reads as the room falling into shadow. */
+  .strategic::after {
+    content: '';
+    position: absolute;
+    inset: 40% 0 0;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      color-mix(in srgb, var(--dusk-room-end) 72%, transparent) 46%,
+      var(--dusk-room-end) 88%
+    );
+  }
+
   .strategic__copy {
     max-width: 34rem;
   }

@@ -198,7 +198,7 @@ export default function YokaiScene({ tier = 'high', reduced = false }) {
         <Haze position={[0, -4, Z.mistFar]} width={220} height={70} color="#2b2054" opacity={0.55} power={1.5} />
         <Trunks z={Z.trunksNear} count={9} spread={140} width={6} height={80} top="#1d1540" bottom="#0e0922" seed={7} />
 
-        <ResponsiveRig portraitScale={0.56} portraitOffset={[-7, 3.5, 0]}>
+        <ResponsiveRig portraitScale={0.52} portraitOffset={[-6.5, 7, 0]}>
           <Float amplitude={0.28} speed={0.34} rotate={0.005}>
             <Portrait />
             <Frame />

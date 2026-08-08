@@ -213,7 +213,7 @@ export default function StrategicScene({ tier = 'high', reduced = false }) {
     <>
       <ParallaxRig strength={0.9} rotation={0.012} enabled={!reduced}>
         <Wall />
-        <ResponsiveRig portraitScale={0.62} portraitOffset={[-5.5, 2.5, 0]}>
+        <ResponsiveRig portraitScale={0.58} portraitOffset={[-5, 8, 0]}>
 
         {/* Floor, tipped away from the camera */}
         <Silhouette
