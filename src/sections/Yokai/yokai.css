@@ -3,7 +3,12 @@
   display: grid;
   align-items: center;
   padding-block: var(--section-y);
-  background: linear-gradient(180deg, #1c1338 0%, #170f2e 55%, #100a20 100%);
+  background: linear-gradient(
+    180deg,
+    var(--dusk-grove-top) 0%,
+    var(--dusk-grove-mid) 55%,
+    var(--dusk-grove-end) 100%
+  );
 }
 
 .yokai__inner {
@@ -25,7 +30,7 @@
 
 .yokai__lede {
   margin-top: clamp(1.1rem, 2vw, 1.75rem);
-  max-width: 26rem;
+  max-width: 24rem;
   font-size: 0.92rem;
   line-height: 1.8;
 }

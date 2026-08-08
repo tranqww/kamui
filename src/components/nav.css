@@ -26,6 +26,7 @@
 }
 
 .nav__logo {
+  font-weight: 800;
   font-size: clamp(1.05rem, 0.9rem + 0.6vw, 1.45rem);
   letter-spacing: 0.14em;
   margin-inline-end: -0.14em;

@@ -1,6 +1,11 @@
 .footer {
   position: relative;
-  background: linear-gradient(180deg, #100a20 0%, #150c1e 40%, #0c0716 100%);
+  background: linear-gradient(
+    180deg,
+    var(--dusk-floor-top) 0%,
+    var(--dusk-floor-mid) 40%,
+    var(--dusk-floor-end) 100%
+  );
   border-top: 1px solid var(--hairline);
 }
 
@@ -45,7 +50,9 @@
   flex: 1 1 12rem;
   min-height: 3.25rem;
   padding-inline: 1.35rem;
-  border: 1px solid var(--hairline);
+  /* The hairline token disappears against the footer's near-black; this field
+     needs to look like a field before it is hovered. */
+  border: 1px solid rgb(251 243 239 / 0.3);
   border-radius: var(--radius-pill);
   background: rgb(251 243 239 / 0.05);
   color: var(--cream);
@@ -94,6 +101,7 @@
 }
 
 .footer__logo {
+  font-weight: 800;
   font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.4rem);
   letter-spacing: 0.14em;
   margin-inline-end: -0.14em;

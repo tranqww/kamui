@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useActiveSection } from '../hooks/useReveal.js'
 import './nav.css'
 
@@ -24,6 +24,8 @@ export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('hero')
+  const sheetRef = useRef(null)
+  const burgerRef = useRef(null)
 
   const ids = useMemo(() => ['hero', ...LINKS.map((l) => l.id)], [])
   useActiveSection(ids, setActive)
@@ -35,17 +37,48 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // The mobile sheet is a modal surface: lock the page and honour Escape.
+  // The mobile sheet is a modal surface, so it has to behave like one: lock
+  // the page, move focus in, keep Tab inside, honour Escape, and hand focus
+  // back to the control that opened it.
   useEffect(() => {
     if (!open) return undefined
+
+    const sheet = sheetRef.current
+    const opener = burgerRef.current
+    const focusables = () =>
+      Array.from(sheet?.querySelectorAll('a[href], button:not([disabled])') ?? [])
+
     const onKey = (event) => {
-      if (event.key === 'Escape') setOpen(false)
+      if (event.key === 'Escape') {
+        setOpen(false)
+        return
+      }
+      if (event.key !== 'Tab') return
+
+      const items = focusables()
+      if (!items.length) return
+      const first = items[0]
+      const last = items[items.length - 1]
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
     }
+
     document.body.style.overflow = 'hidden'
     document.addEventListener('keydown', onKey)
+    // The sheet only unhides on this render, so focus waits a frame.
+    const raf = requestAnimationFrame(() => focusables()[0]?.focus())
+
     return () => {
+      cancelAnimationFrame(raf)
       document.body.style.overflow = ''
       document.removeEventListener('keydown', onKey)
+      opener?.focus()
     }
   }, [open])
 
@@ -87,6 +120,7 @@ export default function Nav() {
 
           <button
             type="button"
+            ref={burgerRef}
             className="nav__burger"
             aria-expanded={open}
             aria-controls="nav-sheet"
@@ -99,7 +133,13 @@ export default function Nav() {
         </div>
       </div>
 
-      <div id="nav-sheet" className="nav__sheet" hidden={!open}>
+      <nav
+        id="nav-sheet"
+        ref={sheetRef}
+        className="nav__sheet"
+        aria-label="Mobile menu"
+        hidden={!open}
+      >
         <ul>
           {LINKS.map(({ id, label }, i) => (
             <li key={id} style={{ '--i': i }}>
@@ -112,7 +152,7 @@ export default function Nav() {
         <a className="btn btn--solid" href="#waitlist" onClick={close}>
           Join the waitlist
         </a>
-      </div>
+      </nav>
     </header>
   )
 }

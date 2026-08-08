@@ -16,8 +16,11 @@ export default function Hero() {
             <KanjiMark className="hero__mark" />
           </div>
 
+          {/* The visible wordmark is one word by design; the rest of the
+              sentence is there for anyone arriving by screen reader or search
+              result, where "Kamui" alone says nothing. */}
           <h1 id="hero-title" className="display hero__title">
-            Kamui
+            Kamui<span className="visually-hidden"> — a blockchain card game</span>
           </h1>
           <p className="hero__sub mono">A Blockchain Card Game</p>
 

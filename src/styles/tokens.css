@@ -24,6 +24,31 @@
   --plum-500: #48285e;
   --plum-400: #573372;
 
+  /* ---- Section backdrop ramp ------------------------------------------
+     One ramp, one place. Note that lightness does not descend monotonically
+     down the page: the reference deliberately lifts the card carousel back
+     up to a mid plum before dropping into the night grove, which is what
+     stops four dark sections from reading as one long tunnel. */
+  --dusk-hero-top: #b98cb4;
+  --dusk-hero-mid: #7d5a92;
+  --dusk-hero-end: #3a2450;
+
+  --dusk-room-top: #2a1230;
+  --dusk-room-mid: #1d0f24;
+  --dusk-room-end: #150c1e;
+
+  --dusk-deck-top: #341c49;
+  --dusk-deck-mid: #3a2050;
+  --dusk-deck-end: #2c1740;
+
+  --dusk-grove-top: #1c1338;
+  --dusk-grove-mid: #170f2e;
+  --dusk-grove-end: #100a20;
+
+  --dusk-floor-top: #100a20;
+  --dusk-floor-mid: #150c1e;
+  --dusk-floor-end: #120a1b;
+
   /* ---- Accents -------------------------------------------------------- */
   --rose: #e8577f;
   --rose-bright: #ff6f93;

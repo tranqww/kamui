@@ -503,21 +503,53 @@ export function drawCardFront(ctx, card, w = CARD_W, h = CARD_H) {
 
   // Moon
   ctx.beginPath()
-  ctx.arc(ax + aw * 0.62, ay + ah * 0.34, aw * 0.2, 0, TAU)
-  ctx.fillStyle = radial(ctx, ax + aw * 0.62, ay + ah * 0.34, 0, aw * 0.2, [
+  ctx.arc(ax + aw * 0.62, ay + ah * 0.3, aw * 0.2, 0, TAU)
+  ctx.fillStyle = radial(ctx, ax + aw * 0.62, ay + ah * 0.3, 0, aw * 0.2, [
     [0, v.moon],
     [1, 'rgba(20,12,34,0)'],
   ])
   ctx.fill()
 
-  // Ground glow
-  ctx.fillStyle = radial(ctx, ax + aw * 0.22, ay + ah * 0.92, 0, aw * 0.5, [
-    [0, 'rgba(255,168,72,0.6)'],
+  // Ridgeline, so the figure has a horizon to stand against
+  const hy = ay + ah * 0.62
+  poly(ctx, [
+    [ax, hy + 26],
+    [ax + aw * 0.16, hy - 6],
+    [ax + aw * 0.34, hy + 16],
+    [ax + aw * 0.52, hy - 18],
+    [ax + aw * 0.72, hy + 10],
+    [ax + aw * 0.88, hy - 8],
+    [ax + aw, hy + 20],
+    [ax + aw, ay + ah],
+    [ax, ay + ah],
+  ])
+  ctx.fillStyle = 'rgba(28,18,52,0.9)'
+  ctx.fill()
+
+  // Ground plane the mask actually stands on
+  ctx.fillStyle = linear(ctx, 0, ay + ah * 0.8, 0, ay + ah, [
+    [0, '#231640'],
+    [1, '#100a22'],
+  ])
+  ctx.fillRect(ax, ay + ah * 0.8, aw, ah * 0.2)
+
+  // Single key light, low and to the left — the same lantern logic every
+  // other scene on the site uses.
+  ctx.fillStyle = radial(ctx, ax + aw * 0.2, ay + ah * 0.86, 0, aw * 0.62, [
+    [0, 'rgba(255,168,72,0.66)'],
+    [0.5, 'rgba(255,124,60,0.2)'],
     [1, 'rgba(255,168,72,0)'],
   ])
   ctx.fillRect(ax, ay, aw, ah)
 
-  oni(ctx, ax + aw * 0.52, ay + ah * 0.78, aw / 620, v.hot, v.cool)
+  oni(ctx, ax + aw * 0.52, ay + ah * 0.84, aw / 620, v.hot, v.cool)
+
+  // Mist pooling at the figure's feet, tying it to the ground
+  ctx.fillStyle = radial(ctx, ax + aw * 0.52, ay + ah * 0.88, 0, aw * 0.44, [
+    [0, 'rgba(120,96,180,0.34)'],
+    [1, 'rgba(120,96,180,0)'],
+  ])
+  ctx.fillRect(ax, ay + ah * 0.6, aw, ah * 0.4)
   ctx.restore()
 
   ctx.strokeStyle = 'rgba(226,206,248,0.55)'

@@ -187,6 +187,21 @@ export function Crane({ position = [0, 0, 0], scale = 1, flip = false, legHeight
 
   return (
     <group position={position} scale={[flip ? -scale : scale, scale, scale]}>
+      {/* Where the legs meet the water. Without this the bird reads as pasted
+          on rather than standing in the shallows. Radial falloff, squashed
+          into an ellipse to match the water's viewing angle. */}
+      <mesh position={[-0.05, 0.05, -0.05]} scale={[1, 0.34, 1]}>
+        <planeGeometry args={[3.4, 3.4]} />
+        <glowMaterial
+          uColor={new THREE.Color('#241738')}
+          uIntensity={0.62}
+          uFalloff={2.2}
+          uCore={0}
+          transparent
+          depthWrite={false}
+          toneMapped={false}
+        />
+      </mesh>
       <Silhouette
         shape={leg}
         position={[-0.34, legHeight * 0.5 - 0.06, -0.02]}

@@ -77,9 +77,12 @@ ul {
    Typography primitives
    ========================================================================== */
 
+/* Cinzel's heavier cuts thicken up and lose their serif definition past about
+   64px, so display sizes take the 700 weight; small marks that need presence
+   opt back up to 800 locally. */
 .display {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 0.98;
   letter-spacing: 0.005em;
   text-transform: uppercase;
