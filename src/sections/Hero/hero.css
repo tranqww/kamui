@@ -1,0 +1,198 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  padding-block: calc(var(--nav-h) + 2rem) 6rem;
+  background: linear-gradient(180deg, #b98cb4 0%, #7d5a92 55%, #3a2450 100%);
+}
+
+.hero__inner {
+  display: grid;
+  width: 100%;
+}
+
+/* The reference parks the wordmark in the right half so the shrine keeps the
+   left. Below the breakpoint it recentres rather than fighting the art. */
+.hero__block {
+  justify-self: end;
+  width: min(34rem, 100%);
+  margin-inline-end: clamp(0rem, 4vw, 5rem);
+  text-align: center;
+  position: relative;
+}
+
+/* A soft scrim: the wordmark sits over the brightest part of the sky, and
+   cream-on-peach is not a contrast ratio anyone should ship. */
+.hero__block::before {
+  content: '';
+  position: absolute;
+  inset: -22% -18%;
+  z-index: -2;
+  background: radial-gradient(
+    58% 52% at 50% 46%,
+    rgb(58 24 62 / 0.42) 0%,
+    rgb(58 24 62 / 0.24) 45%,
+    transparent 72%
+  );
+  pointer-events: none;
+}
+
+.hero__markwrap {
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  translate: 0 -58%;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero__mark {
+  width: min(21rem, 62%);
+  height: auto;
+  color: var(--crimson);
+  opacity: 0.42;
+  mix-blend-mode: multiply;
+  rotate: -4deg;
+  filter: blur(0.6px);
+  animation: mark-breathe 14s var(--ease-in-out) infinite;
+}
+
+@keyframes mark-breathe {
+  0%,
+  100% {
+    rotate: -4deg;
+    scale: 1;
+  }
+  50% {
+    rotate: -2.4deg;
+    scale: 1.035;
+  }
+}
+
+.hero__title {
+  font-size: var(--step-4);
+  letter-spacing: 0.075em;
+  /* Tracking adds a trailing gap on the last glyph; pull it back so the
+     wordmark stays optically centred. */
+  margin-inline-end: -0.075em;
+  color: var(--cream);
+  text-shadow: 0 0.06em 0.5em rgb(58 20 60 / 0.45);
+}
+
+.hero__sub {
+  margin-top: clamp(0.5rem, 1.4vw, 1.15rem);
+  font-size: clamp(0.62rem, 0.52rem + 0.4vw, 0.86rem);
+  letter-spacing: 0.36em;
+  margin-inline-end: -0.36em;
+  color: var(--cream);
+  opacity: 0.92;
+}
+
+.hero__cta {
+  margin-top: clamp(1.6rem, 3vw, 2.6rem);
+}
+
+.hero__note {
+  margin-top: 1.05rem;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cream-faint);
+}
+
+.hero__note a {
+  border-bottom: 1px solid currentColor;
+}
+
+.hero__note a:hover {
+  color: var(--cream);
+}
+
+/* --------------------------------------------------------------------------
+   Scroll cue
+   -------------------------------------------------------------------------- */
+
+.hero__cue {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.25rem, 3vw, 2.25rem);
+  translate: -50% 0;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--cream-faint);
+}
+
+.hero__cue-rail {
+  width: 1px;
+  height: 3.25rem;
+  background: linear-gradient(180deg, transparent, var(--cream-ghost) 20%, var(--cream-ghost));
+  position: relative;
+  overflow: hidden;
+}
+
+.hero__cue-rail::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: -40%;
+  height: 40%;
+  background: linear-gradient(180deg, transparent, var(--cream));
+  animation: cue-fall 2.4s var(--ease-in-out) infinite;
+}
+
+@keyframes cue-fall {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(350%);
+    opacity: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .hero {
+    align-items: end;
+    padding-block-end: clamp(5rem, 16vh, 9rem);
+  }
+
+  .hero__block {
+    justify-self: center;
+    margin-inline-end: 0;
+    width: min(30rem, 100%);
+  }
+
+  .hero__mark {
+    width: min(20rem, 86%);
+    opacity: 0.42;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero__sub {
+    letter-spacing: 0.26em;
+    margin-inline-end: -0.26em;
+  }
+
+  .hero__cue {
+    display: none;
+  }
+}

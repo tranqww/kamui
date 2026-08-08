@@ -1,0 +1,92 @@
+.strategic {
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  padding-block: var(--section-y);
+  background: linear-gradient(180deg, #2a1230 0%, #1d0f24 62%, #150c1e 100%);
+}
+
+.strategic__inner {
+  width: 100%;
+}
+
+.strategic__copy {
+  max-width: 30rem;
+}
+
+.strategic__title {
+  margin-top: clamp(1rem, 2vw, 1.6rem);
+  font-size: var(--step-3);
+  color: var(--cream);
+}
+
+.strategic__lede {
+  margin-top: clamp(1.1rem, 2vw, 1.75rem);
+  max-width: 27rem;
+  font-size: 0.92rem;
+  line-height: 1.8;
+}
+
+.strategic__platforms {
+  margin-top: clamp(1.8rem, 3.5vw, 3rem);
+}
+
+/* --------------------------------------------------------------------------
+   Platform badges
+   -------------------------------------------------------------------------- */
+
+.platforms {
+  display: grid;
+  gap: clamp(0.7rem, 1.6vw, 1.15rem);
+  margin: 0;
+}
+
+.platforms__row ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(1.1rem, 2.6vw, 2.1rem);
+  margin: 0;
+}
+
+.platforms__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(0.95rem, 0.82rem + 0.5vw, 1.3rem);
+  line-height: 1;
+  color: var(--cream);
+  opacity: 0.92;
+  white-space: nowrap;
+}
+
+.platforms__icon {
+  display: inline-flex;
+}
+
+.platforms__icon svg {
+  width: 1.05em;
+  height: 1.05em;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .strategic {
+    align-items: end;
+    min-height: 108svh;
+    padding-block-end: clamp(3rem, 9vw, 5rem);
+  }
+
+  .strategic__copy {
+    max-width: 34rem;
+  }
+
+  .strategic__lede {
+    max-width: none;
+  }
+}

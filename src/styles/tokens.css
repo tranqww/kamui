@@ -1,0 +1,82 @@
+/* ==========================================================================
+   KAMUI — design tokens
+   Palette sampled directly from the reference frames: a feudal-Japan dusk
+   that runs from peach sky through mauve haze into near-black plum interiors.
+   ========================================================================== */
+
+:root {
+  /* ---- Dusk sky ramp (hero) ------------------------------------------ */
+  --sky-1: #f9c9c4;
+  --sky-2: #f2a9be;
+  --sky-3: #d68cbb;
+  --sky-4: #9b6fa8;
+  --sky-5: #6b4c86;
+
+  /* ---- Ink / interiors ------------------------------------------------ */
+  --ink-900: #120a1b;
+  --ink-800: #1a0f27;
+  --ink-700: #241433;
+  --ink-600: #2f1a41;
+
+  /* ---- Plum (card carousel) ------------------------------------------ */
+  --plum-700: #2e1a3d;
+  --plum-600: #3a1f4d;
+  --plum-500: #48285e;
+  --plum-400: #573372;
+
+  /* ---- Accents -------------------------------------------------------- */
+  --rose: #e8577f;
+  --rose-bright: #ff6f93;
+  --rose-soft: #f08ba6;
+  --crimson: #b03a55;
+  --gold: #ffb547;
+  --gold-soft: #ffd98a;
+  --jade: #4f8f86;
+
+  /* ---- Neutrals ------------------------------------------------------- */
+  --cream: #fbf3ef;
+  --cream-dim: rgb(251 243 239 / 0.66);
+  --cream-faint: rgb(251 243 239 / 0.38);
+  --cream-ghost: rgb(251 243 239 / 0.14);
+  --hairline: rgb(251 243 239 / 0.18);
+
+  /* ---- Type ----------------------------------------------------------- */
+  /* Cinzel is Trajan-derived: flared stems, small sharp serifs, caps only —
+     the closest free match to the reference's carved display face. */
+  --font-display: 'Cinzel', 'Trajan Pro', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Jost', 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Share Tech Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --step--1: clamp(0.75rem, 0.72rem + 0.15vw, 0.82rem);
+  --step-0: clamp(0.9rem, 0.86rem + 0.2vw, 1rem);
+  --step-1: clamp(1.05rem, 0.98rem + 0.35vw, 1.25rem);
+  --step-2: clamp(1.6rem, 1.2rem + 2vw, 2.6rem);
+  --step-3: clamp(2.4rem, 1.5rem + 4.2vw, 4.75rem);
+  --step-4: clamp(3.2rem, 1rem + 9.4vw, 8.75rem);
+
+  --tracking-mono: 0.32em;
+  --tracking-btn: 0.18em;
+
+  /* ---- Space ---------------------------------------------------------- */
+  --gutter: clamp(1.25rem, 0.6rem + 3vw, 4rem);
+  --section-y: clamp(5rem, 3rem + 9vw, 11rem);
+  --maxw: 1440px;
+
+  /* ---- Chrome --------------------------------------------------------- */
+  --nav-h: clamp(64px, 5.2vw, 88px);
+  --radius-pill: 999px;
+  --radius-sm: 4px;
+
+  /* ---- Motion --------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 220ms;
+  --dur: 480ms;
+  --dur-slow: 900ms;
+}
+
+/* The site is a single committed dark-dusk world — it does not invert.
+   We still declare the scheme so form controls and scrollbars match. */
+:root {
+  color-scheme: dark;
+}

@@ -1,0 +1,13 @@
+node_modules
+dist
+dist-ssr
+.DS_Store
+*.local
+*.log
+.vite
+.env
+.env.*
+!.env.example
+
+# Reference material — not redistributed with the source
+*.mp4

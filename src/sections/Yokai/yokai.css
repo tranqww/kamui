@@ -1,0 +1,51 @@
+.yokai {
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  padding-block: var(--section-y);
+  background: linear-gradient(180deg, #1c1338 0%, #170f2e 55%, #100a20 100%);
+}
+
+.yokai__inner {
+  width: 100%;
+}
+
+.yokai__copy {
+  max-width: 33rem;
+}
+
+/* "CREATURES" is the longest word on the page — this heading is sized from
+   that word, not from the section's nominal display step, so the line never
+   wraps inside its reveal mask. */
+.yokai__title {
+  margin-top: clamp(1rem, 2vw, 1.6rem);
+  font-size: clamp(2rem, 1rem + 3.4vw, 4.1rem);
+  color: var(--cream);
+}
+
+.yokai__lede {
+  margin-top: clamp(1.1rem, 2vw, 1.75rem);
+  max-width: 26rem;
+  font-size: 0.92rem;
+  line-height: 1.8;
+}
+
+.yokai__cta {
+  margin-top: clamp(1.6rem, 3vw, 2.5rem);
+}
+
+@media (max-width: 900px) {
+  .yokai {
+    align-items: end;
+    min-height: 112svh;
+    padding-block-end: clamp(3rem, 9vw, 5rem);
+  }
+
+  .yokai__copy {
+    max-width: 34rem;
+  }
+
+  .yokai__lede {
+    max-width: none;
+  }
+}

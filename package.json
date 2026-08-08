@@ -1,0 +1,27 @@
+{
+  "name": "kamui",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "KAMUI — a blockchain card game landing page rebuilt as a real-time WebGL experience.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.0.6",
+    "@react-three/fiber": "^9.1.2",
+    "@react-three/postprocessing": "^3.0.4",
+    "gsap": "^3.13.0",
+    "lenis": "^1.3.1",
+    "postprocessing": "^6.37.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "three": "^0.176.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.4.1",
+    "vite": "^6.3.5"
+  }
+}

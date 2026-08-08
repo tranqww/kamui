@@ -1,0 +1,201 @@
+.footer {
+  position: relative;
+  background: linear-gradient(180deg, #100a20 0%, #150c1e 40%, #0c0716 100%);
+  border-top: 1px solid var(--hairline);
+}
+
+/* --------------------------------------------------------------------------
+   Waitlist band
+   -------------------------------------------------------------------------- */
+
+.footer__waitlist {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(2rem, 5vw, 5rem);
+  padding-block: clamp(3.5rem, 8vw, 7rem);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.footer__title {
+  margin-top: 0.9rem;
+  font-size: var(--step-2);
+  color: var(--cream);
+}
+
+.footer__lede {
+  margin-top: 1rem;
+  max-width: 30ch;
+}
+
+.footer__label {
+  display: block;
+  margin-bottom: 0.85rem;
+  color: var(--cream-faint);
+  font-size: 0.62rem;
+}
+
+.footer__field {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.footer__input {
+  flex: 1 1 12rem;
+  min-height: 3.25rem;
+  padding-inline: 1.35rem;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-pill);
+  background: rgb(251 243 239 / 0.05);
+  color: var(--cream);
+  font-size: 0.95rem;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.footer__input::placeholder {
+  color: var(--cream-faint);
+}
+
+.footer__input:hover,
+.footer__input:focus-visible {
+  border-color: rgb(251 243 239 / 0.44);
+  background: rgb(251 243 239 / 0.08);
+}
+
+.footer__submit {
+  flex: 0 0 auto;
+  padding-inline: 2rem;
+}
+
+.footer__status {
+  min-height: 1.4rem;
+  margin-top: 0.85rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--rose-soft);
+}
+
+.footer__status.is-ok {
+  color: var(--cream-dim);
+}
+
+/* --------------------------------------------------------------------------
+   Main
+   -------------------------------------------------------------------------- */
+
+.footer__main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  padding-block: clamp(3rem, 6vw, 5rem);
+}
+
+.footer__logo {
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.4rem);
+  letter-spacing: 0.14em;
+  margin-inline-end: -0.14em;
+  color: var(--cream);
+}
+
+.footer__tagline {
+  margin-top: 0.8rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.28em;
+  color: var(--cream-faint);
+}
+
+.footer__socials {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 1.75rem;
+}
+
+.footer__socials a {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  color: var(--cream-dim);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.footer__socials a:hover {
+  color: var(--cream);
+  border-color: var(--rose);
+  transform: translateY(-2px);
+}
+
+.footer__nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.footer__col-title {
+  font-size: 0.62rem;
+  color: var(--rose);
+  font-weight: 400;
+}
+
+.footer__col ul {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1.15rem;
+}
+
+.footer__col a {
+  font-size: 0.92rem;
+  color: var(--cream-dim);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.footer__col a:hover {
+  color: var(--cream);
+}
+
+/* --------------------------------------------------------------------------
+   Fine print
+   -------------------------------------------------------------------------- */
+
+.footer__fine {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  padding-block: clamp(1.5rem, 3vw, 2.25rem);
+  border-top: 1px solid var(--hairline);
+  font-size: 0.76rem;
+  color: var(--cream-faint);
+}
+
+.footer__fine a {
+  color: var(--cream-dim);
+  border-bottom: 1px solid currentColor;
+}
+
+.footer__fine a:hover {
+  color: var(--cream);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .footer__waitlist,
+  .footer__main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .footer__nav {
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  }
+}
