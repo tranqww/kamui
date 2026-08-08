@@ -245,18 +245,6 @@ export function pineTreeShape({ height = 6, width = 2.2, tiers = 4, seed = 5 } =
   return shape
 }
 
-/** Cherry-blossom petal — a teardrop with the notched tip sakura is known for. */
-export function petalShape({ scale = 1 } = {}) {
-  const s = scale
-  const shape = new THREE.Shape()
-  shape.moveTo(0, -0.5 * s)
-  shape.bezierCurveTo(0.42 * s, -0.3 * s, 0.46 * s, 0.24 * s, 0.14 * s, 0.46 * s)
-  shape.quadraticCurveTo(0, 0.34 * s, -0.14 * s, 0.46 * s)
-  shape.bezierCurveTo(-0.46 * s, 0.24 * s, -0.42 * s, -0.3 * s, 0, -0.5 * s)
-  shape.closePath()
-  return shape
-}
-
 /**
  * Half-profile of a stone lantern (ishidoro), fed to LatheGeometry.
  * Returns Vector2 points from the ground up: base, pedestal, fire box, cap,
@@ -285,32 +273,6 @@ export function lanternProfile({ scale = 1 } = {}) {
     [0.0, 3.0],
   ]
   return p.map(([x, y]) => new THREE.Vector2(x * scale, y * scale))
-}
-
-/** Flat stone step slabs climbing a slope — the shrine stairway. */
-export function stairShape({ steps = 14, width = 3.6, rise = 0.34, run = 0.5 } = {}) {
-  const shape = new THREE.Shape()
-  const half = width / 2
-
-  shape.moveTo(-half, 0)
-  for (let i = 0; i < steps; i += 1) {
-    // Stairs narrow with height to fake perspective inside a flat silhouette.
-    const k = 1 - (i / steps) * 0.42
-    shape.lineTo(-half * k, i * rise)
-    shape.lineTo(-half * k, (i + 1) * rise)
-  }
-  const topK = 1 - 0.42
-  shape.lineTo(half * topK, steps * rise)
-  for (let i = steps - 1; i >= 0; i -= 1) {
-    const k = 1 - (i / steps) * 0.42
-    shape.lineTo(half * k, (i + 1) * rise)
-    shape.lineTo(half * k, i * rise)
-  }
-  shape.closePath()
-  // Center the stair run on its own origin, shifted by the run so it leans.
-  shape.autoClose = true
-  void run
-  return shape
 }
 
 /** Grass and reed tufts along the waterline. */

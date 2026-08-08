@@ -186,15 +186,6 @@ export function TimeDriver({ target, speed = 1 }) {
   return null
 }
 
-/** Returns a ref holding seconds accumulated the same way. */
-export function useElapsed() {
-  const t = useRef(0)
-  useFrame((_, delta) => {
-    t.current += Math.min(delta, 1 / 30)
-  })
-  return t
-}
-
 /* ==========================================================================
    Glow — additive halo billboard for every light source in the scenes
    ========================================================================== */

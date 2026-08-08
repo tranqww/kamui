@@ -222,32 +222,3 @@ export function Crane({ position = [0, 0, 0], scale = 1, flip = false, legHeight
     </group>
   )
 }
-
-/* ==========================================================================
-   Torii gate
-   ========================================================================== */
-
-export function Torii({ position = [0, 0, 0], scale = 1, color = '#8e3f52' }) {
-  const pillar = useMemo(() => roundedRectShape({ width: 0.7, height: 8, radius: 0.2 }), [])
-  const tie = useMemo(() => roundedRectShape({ width: 8.4, height: 0.55, radius: 0.14 }), [])
-
-  // The kasagi (top rail) sweeps up at both ends, like the roof lines.
-  const kasagi = useMemo(() => {
-    const s = new THREE.Shape()
-    s.moveTo(-5.6, 0.2)
-    s.quadraticCurveTo(0, -0.5, 5.6, 0.2)
-    s.lineTo(5.6, -0.5)
-    s.quadraticCurveTo(0, -1.2, -5.6, -0.5)
-    s.closePath()
-    return s
-  }, [])
-
-  return (
-    <group position={position} scale={scale}>
-      <Silhouette shape={pillar} position={[-3.4, 4, 0]} top={color} bottom="#4d1f2e" />
-      <Silhouette shape={pillar} position={[3.4, 4, 0]} top={color} bottom="#4d1f2e" />
-      <Silhouette shape={tie} position={[0, 6.4, 0.05]} top={color} bottom="#5f2739" />
-      <Silhouette shape={kasagi} position={[0, 8.2, 0.1]} top="#a34a5f" bottom="#5f2739" curveSegments={30} />
-    </group>
-  )
-}
