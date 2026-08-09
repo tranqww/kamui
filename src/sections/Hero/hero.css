@@ -124,58 +124,6 @@
 }
 
 /* --------------------------------------------------------------------------
-   Scroll cue
-   -------------------------------------------------------------------------- */
-
-.hero__cue {
-  position: absolute;
-  left: 50%;
-  bottom: clamp(1.25rem, 3vw, 2.25rem);
-  translate: -50% 0;
-  z-index: 2;
-  display: grid;
-  justify-items: center;
-  gap: 0.7rem;
-  font-family: var(--font-mono);
-  font-size: 0.56rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--cream-faint);
-}
-
-.hero__cue-rail {
-  width: 1px;
-  height: 3.25rem;
-  background: linear-gradient(180deg, transparent, var(--cream-ghost) 20%, var(--cream-ghost));
-  position: relative;
-  overflow: hidden;
-}
-
-.hero__cue-rail::after {
-  content: '';
-  position: absolute;
-  inset-inline: 0;
-  top: -40%;
-  height: 40%;
-  background: linear-gradient(180deg, transparent, var(--cream));
-  animation: cue-fall 2.4s var(--ease-in-out) infinite;
-}
-
-@keyframes cue-fall {
-  0% {
-    transform: translateY(0);
-    opacity: 0;
-  }
-  25% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(350%);
-    opacity: 0;
-  }
-}
-
-/* --------------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------------- */
 
@@ -201,9 +149,5 @@
   .hero__sub {
     letter-spacing: 0.26em;
     margin-inline-end: -0.26em;
-  }
-
-  .hero__cue {
-    display: none;
   }
 }
